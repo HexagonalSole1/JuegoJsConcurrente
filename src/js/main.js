@@ -49,7 +49,7 @@ function drawGame() {
     ctx.fillText(`Tiempo: ${elapsedTime.toFixed(2)}s`, canvas.width - 120, 30);
 
     drawHealthBar(ctx, player);
-    updateProjectiles(ctx, projectiles, enemies);
+    updateProjectiles(ctx, projectiles, enemies,player);
     lifeOrbs = updateLifeOrbs(ctx, lifeOrbs);
     checkLifeOrbCollection(lifeOrbs, player);
 
@@ -78,7 +78,8 @@ enemyWorker.onmessage = (e) => {
         enemies[enemyIndex].position = e.data.position;
 
         if (enemies[enemyIndex].life <= 0 && !enemies[enemyIndex].lifeOrbCreated) {
-            createLifeOrb(enemies[enemyIndex].position.x, enemies[enemyIndex].position.y, lifeOrbs);
+            const orbType = Math.random() < 0.5 ? 'LIFE' : Math.random() < 0.5 ? 'SPEED' : 'RANGE'; // Elegir tipo aleatorio
+            createLifeOrb(enemies[enemyIndex].position.x, enemies[enemyIndex].position.y, orbType, lifeOrbs);
             enemies[enemyIndex].lifeOrbCreated = true;
         }
     }
@@ -102,12 +103,11 @@ function gameLoop(timestamp) {
             if (enemy.life > 0) {
                 enemyWorker.postMessage({
                     playerPosition: player.position,
-                    enemy: { position: enemy.position, speed: enemy.speed }, // Asegúrate de pasar la velocidad
+                    enemy: { position: enemy.position, speed: enemy.speed },
                     index: index
                 });
             }
         });
-        
 
         drawGame();
 

@@ -1,3 +1,6 @@
+import { player } from "../game/logicGame.js";
+
+// Función para disparar un proyectil hacia las coordenadas especificadas
 export function shootProjectile(targetX, targetY, player, projectiles) {
     const dx = targetX - (player.position.x + 10);
     const dy = targetY - (player.position.y + 10);
@@ -5,29 +8,32 @@ export function shootProjectile(targetX, targetY, player, projectiles) {
 
     // Asegurarse de que la distancia no sea cero para evitar división por cero
     if (distance > 0) {
-        const speed = 5;
-        const velocityX = (dx / distance) * speed;
-        const velocityY = (dy / distance) * speed;
+        const speed = 5; // Velocidad del proyectil
+        const velocityX = (dx / distance) * speed; // Componente X de la velocidad
+        const velocityY = (dy / distance) * speed; // Componente Y de la velocidad
 
+        // Crear el objeto proyectil
         const projectile = {
             x: player.position.x + 10,
             y: player.position.y + 10,
             velocityX: velocityX,
             velocityY: velocityY,
-            size: 5,
+            size: 5, // Tamaño del proyectil
             traveledDistance: 0,
-            maxDistance: player.rangeBullet, // Asegúrate de que esta propiedad exista en player
+            maxDistance: player.rangeBullet, // Rango máximo del proyectil
         };
 
+        // Agregar el proyectil a la lista de proyectiles
         projectiles.push(projectile);
     }
 }
 
-export function updateProjectiles(ctx, projectiles, enemies) {
+// Función para actualizar la posición de los proyectiles y verificar colisiones
+export function updateProjectiles(ctx, projectiles, enemies, player) {
     for (let index = projectiles.length - 1; index >= 0; index--) {
         const projectile = projectiles[index];
 
-        // Mover proyectil
+        // Mover el proyectil
         projectile.x += projectile.velocityX;
         projectile.y += projectile.velocityY;
 
@@ -45,11 +51,13 @@ export function updateProjectiles(ctx, projectiles, enemies) {
                 const collisionBuffer = 5; 
                 const distanceToEnemy = Math.hypot(enemy.position.x - projectile.x, enemy.position.y - projectile.y);
                 
+                // Verificar si hay colisión
                 if (distanceToEnemy < (enemy.size / 2) + collisionBuffer) {
-                    enemy.life -= 1;  // Reducir la vida del enemigo
+                    enemy.life -= player.damage;  // Reducir la vida del enemigo
                     console.log(`Vida del enemigo ${enemyIndex} reducida. Vida restante: ${enemy.life}`);
-                    projectiles.splice(index, 1);  // Eliminar proyectil tras impacto
+                    projectiles.splice(index, 1);  // Eliminar el proyectil tras impacto
 
+                    // Verificar si el enemigo ha sido derrotado
                     if (enemy.life <= 0) {
                         console.log('¡Enemigo derrotado!');
                     }
