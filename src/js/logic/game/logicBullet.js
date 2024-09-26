@@ -19,7 +19,7 @@ export function shootProjectile(targetX, targetY, player, projectiles) {
             velocityX: velocityX,
             velocityY: velocityY,
             size: 5, // Tamaño del proyectil
-            traveledDistance: 0,
+            traveledDistance: 0, // Distancia recorrida por el proyectil
             maxDistance: player.rangeBullet, // Rango máximo del proyectil
         };
 
@@ -33,9 +33,17 @@ export function updateProjectiles(ctx, projectiles, enemies, player) {
     for (let index = projectiles.length - 1; index >= 0; index--) {
         const projectile = projectiles[index];
 
+        // Calcular la distancia que se mueve el proyectil en este frame
+        const deltaX = projectile.velocityX;
+        const deltaY = projectile.velocityY;
+        const distanceTraveledThisFrame = Math.hypot(deltaX, deltaY);
+
+        // Sumar la distancia recorrida en este frame a la distancia total del proyectil
+        projectile.traveledDistance += distanceTraveledThisFrame;
+
         // Mover el proyectil
-        projectile.x += projectile.velocityX;
-        projectile.y += projectile.velocityY;
+        projectile.x += deltaX;
+        projectile.y += deltaY;
 
         // Dibujar el proyectil
         ctx.fillStyle = 'blue'; // Color del proyectil
@@ -43,14 +51,20 @@ export function updateProjectiles(ctx, projectiles, enemies, player) {
         ctx.arc(projectile.x, projectile.y, projectile.size, 0, Math.PI * 2);
         ctx.fill();
 
+        // Verificar si el proyectil ha excedido su rango máximo
+        if (projectile.traveledDistance >= projectile.maxDistance) {
+            projectiles.splice(index, 1); // Eliminar el proyectil si ha alcanzado su rango
+            continue; // Pasar al siguiente proyectil
+        }
+
         // Verificar colisión con cada enemigo
         for (let enemyIndex = 0; enemyIndex < enemies.length; enemyIndex++) {
             const enemy = enemies[enemyIndex];
             if (enemy.life > 0) {
                 // Aumentar el tamaño del área de colisión
-                const collisionBuffer = 5; 
+                const collisionBuffer = 5;
                 const distanceToEnemy = Math.hypot(enemy.position.x - projectile.x, enemy.position.y - projectile.y);
-                
+
                 // Verificar si hay colisión
                 if (distanceToEnemy < (enemy.size / 2) + collisionBuffer) {
                     enemy.life -= player.damage;  // Reducir la vida del enemigo
