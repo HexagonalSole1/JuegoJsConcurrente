@@ -1,8 +1,8 @@
 // Tipos de bolitas y sus efectos
 const orbTypes = {
     LIFE: { size: 10, lifeValue: 20, color: 'purple', effect: (player) => { player.life = Math.min(player.maxLife, player.life + 20); } },
-    SPEED: { size: 10, lifeValue: 0, color: 'green', effect: (player) => { player.velocity += 4; } },
-    RANGE: { size: 10, lifeValue: 0, color: 'blue', effect: (player) => { player.range += 10; } },
+    SPEED: { size: 10, lifeValue: 0, color: 'green', effect: (player) => { player.velocity += 10; } },
+    RANGE: { size: 10, lifeValue: 0, color: 'blue', effect: (player) => { player.range += 20; } },
     DAMAGE: { size: 10, lifeValue: 0, color: 'red', effect: (player) => { player.damage += 1; } }, // Nueva bolita de daño
 };
 
