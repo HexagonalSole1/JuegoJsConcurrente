@@ -19,7 +19,6 @@ function moveEnemy(playerPosition, enemyIndex, speed) {
             y: enemyPosition.y + normalizedY * speed,
         };
 
-        // Verificar si hay colisión con otros enemigos
         let canMove = true;
         for (const otherIndex in enemyPositions) {
             if (otherIndex != enemyIndex) {
@@ -32,14 +31,12 @@ function moveEnemy(playerPosition, enemyIndex, speed) {
             }
         }
 
-        // Si no hay colisión, actualizar la posición del enemigo
         if (canMove) {
             enemyPosition.x = newPosition.x;
             enemyPosition.y = newPosition.y;
         }
     }
 
-    // Enviar la nueva posición al hilo principal
     postMessage({ position: { ...enemyPosition }, index: enemyIndex });
 }
 

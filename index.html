@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego Modular con Web Workers</title>
-    <style>
-        canvas {
-            border: 2px solid black;
-        }
-    </style>
+    <link rel="stylesheet" href="./src/css/index.css">
 </head>
 <body>
+    <div class="instructions">
+        <h2>Instrucciones:</h2>
+        <p>Mueve el personaje con las teclas <strong>Arriba,Abajo,Izquierda,Derecha</strong> o <strong>A,W,S,D</strong>.</p>
+        <p>Apunta con el ratón y dispara con clic izquierdo.</p>
+    </div>
+
     <canvas id="gameCanvas" width="1000" height="600" style="background-image: url('src/imgs/background.png'); background-size: cover; background-repeat: no-repeat; background-position: center;"></canvas>
 
     <script src="/src/js/main.js" type="module"></script>
